@@ -34,7 +34,7 @@ ingress:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:53341170245652:certificate/50ffc8b1-dd0b\-414d-ad86-52ff1d6dabf6
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
   hosts:
-    - host: jitsu.activity.com
+    - host: activity.liquide.life
       paths:
         - path: /configurator
           pathType: ImplementationSpecific
