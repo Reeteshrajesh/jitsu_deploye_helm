@@ -31,7 +31,7 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:53341170245652:certificate/50ffc8b1-dd0b\-414d-ad86-52ff1d6dabf6
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:535117076952:certificate/50ffc8b1-dd0b-414d-ad86-52fb1d6daba6
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
   hosts:
     - host: activity.liquide.life
@@ -42,6 +42,10 @@ ingress:
         - path: /api
           pathType: ImplementationSpecific
           port: 7000
+  tls:
+    - hosts:
+        - activity.liquide.life
+      secretName: jitsu-tls
 
 resources:
   limits:
@@ -52,12 +56,13 @@ resources:
     memory: 512Mi
 
 secrets:
-  JITSU_AUTH_SECRET: "N7mF3Jk9QxzR5bXsP01nZw==" #kuchh bhi daal sakate hai
-  SMTP_HOST: "smtp.gmail.com"            # Or cross check karana padega
+  JITSU_AUTH_SECRET: "N7mF3Jk9QxzR5bXsP01nZw=="
+  SMTP_HOST: "ASPMX.L.GOOGLE.COM"
   SMTP_PORT: "587"
   SMTP_USER: "subscriptions@liquide.life"
-  SMTP_PASSWORD: "your-email-app-password" #yaha app password banakar dalana padega
+  SMTP_PASSWORD: "Subscriptions@2025"
 
 config:
-  redisUrl: "redis://redis:6379"
-  postgresDsn: "postgres://jitsu:jitsu@postgres:5432/jitsu?sslmode=disable"
+  redisUrl: "redis://jitsu-redis:6379"
+  postgresDsn: "postgres://jitsu:jitsu@jitsu-postgres:5432/jitsu?sslmode=disable"
+
