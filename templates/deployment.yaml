@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jitsu.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "jitsu.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "jitsu.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "jitsu.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: jitsu
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: REDIS_URL
+              value: {{ .Values.config.redisUrl | quote }}
+            - name: CONFIGURATOR_META_STORAGE
+              value: "postgres"
+            - name: CONFIGURATOR_META_DSN
+              value: {{ .Values.config.postgresDsn | quote }}
+            - name: EVENTNATIVE_META_STORAGE
+              value: "postgres"
+            - name: EVENTNATIVE_META_DSN
+              value: {{ .Values.config.postgresDsn | quote }}
+            - name: JITSU_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsu.fullname" . }}-secrets
+                  key: JITSU_AUTH_SECRET
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsu.fullname" . }}-secrets
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsu.fullname" . }}-secrets
+                  key: SMTP_PORT
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsu.fullname" . }}-secrets
+                  key: SMTP_USER
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "jitsu.fullname" . }}-secrets
+                  key: SMTP_PASSWORD
+          ports:
+            - containerPort: {{ .Values.service.ports.controlPlane }}
+              name: controlplane
+            - containerPort: {{ .Values.service.ports.dataPlane }}
+              name: dataplane
+            - containerPort: {{ .Values.service.ports.eventProxy }}
+              name: eventproxy
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+
+      # Add redis and postgres sidecars or deploy separately below
