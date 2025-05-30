@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jitsu.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "jitsu.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: controlplane
+      port: 8000
+      targetPort: controlplane
+    - name: dataplane
+      port: 7000
+      targetPort: dataplane
+    - name: eventproxy
+      port: 8001
+      targetPort: eventproxy
+  selector:
+    app.kubernetes.io/name: {{ include "jitsu.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
