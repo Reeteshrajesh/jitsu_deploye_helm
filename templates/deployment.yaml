@@ -72,4 +72,4 @@ spec:
               cpu: {{ .Values.resources.requests.cpu }}
               memory: {{ .Values.resources.requests.memory }}
 
-      # Add redis and postgres sidecars or deploy separately below
+      # hum redis and postgress seprately deploy kar rahe hai 
