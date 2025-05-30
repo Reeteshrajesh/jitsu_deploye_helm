@@ -31,7 +31,7 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:535117076952:certificate/50ffc8b1-dd0b-414d-ad86-52fb1d6daba6
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:53341170245652:certificate/50ffc8b1-dd0b\-414d-ad86-52ff1d6dabf6
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
   hosts:
     - host: jitsu.activity.com
@@ -52,11 +52,11 @@ resources:
     memory: 512Mi
 
 secrets:
-  JITSU_AUTH_SECRET: "super-secure-random-string"
-  SMTP_HOST: "smtp.your-email.com"
+  JITSU_AUTH_SECRET: "N7mF3Jk9QxzR5bXsP01nZw==" #kuchh bhi daal sakate hai
+  SMTP_HOST: "smtp.gmail.com"            # Or cross check karana padega
   SMTP_PORT: "587"
-  SMTP_USER: "your-email@domain.com"
-  SMTP_PASSWORD: "your-smtp-password"
+  SMTP_USER: "subscriptions@liquide.life"
+  SMTP_PASSWORD: "your-email-app-password" #yaha app password banakar dalana padega
 
 config:
   redisUrl: "redis://redis:6379"
