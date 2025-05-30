@@ -1,0 +1,63 @@
+replicaCount: 1
+
+image:
+  repository: jitsucom/jitsu
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    controlPlane: 8000
+    dataPlane: 7000
+    eventProxy: 8001
+
+redis:
+  enabled: true
+  image: redis:6
+  port: 6379
+
+postgres:
+  enabled: true
+  image: postgres:13
+  user: jitsu
+  password: jitsu
+  database: jitsu
+  port: 5432
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:535117076952:certificate/50ffc8b1-dd0b-414d-ad86-52fb1d6daba6
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+  hosts:
+    - host: jitsu.activity.com
+      paths:
+        - path: /configurator
+          pathType: ImplementationSpecific
+          port: 8000
+        - path: /api
+          pathType: ImplementationSpecific
+          port: 7000
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+secrets:
+  JITSU_AUTH_SECRET: "super-secure-random-string"
+  SMTP_HOST: "smtp.your-email.com"
+  SMTP_PORT: "587"
+  SMTP_USER: "your-email@domain.com"
+  SMTP_PASSWORD: "your-smtp-password"
+
+config:
+  redisUrl: "redis://redis:6379"
+  postgresDsn: "postgres://jitsu:jitsu@postgres:5432/jitsu?sslmode=disable"
